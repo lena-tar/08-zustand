@@ -9,7 +9,14 @@ export const metadata: Metadata = {
     title: "Create note",
     description: "Create a new note in NoteHub application",
     url: "https://08-zustand-lena-tar.vercel.app/notes/action/create",
-    images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+    images: [
+      {
+        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+        width: 1200,
+        height: 630,
+        alt: "NoteHub",
+      },
+    ],
   },
 };
 
