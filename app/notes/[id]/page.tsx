@@ -9,17 +9,16 @@ import { fetchNoteById } from "@/lib/api";
 import NoteDetailsClient from "./NoteDetails.client";
 
 interface NoteDetailsPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: NoteDetailsPageProps): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
 
   const note = await fetchNoteById(id);
-
-  const description = note.content?.slice(0, 120) || "Note details page";
+  const description = note.content?.trim().slice(0, 120) || "Note details page";
 
   return {
     title: note.title,
@@ -36,7 +35,7 @@ export async function generateMetadata({
 export default async function NoteDetailsPage({
   params,
 }: NoteDetailsPageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   const queryClient = new QueryClient();
 

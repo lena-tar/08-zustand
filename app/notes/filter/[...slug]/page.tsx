@@ -5,35 +5,45 @@ import {
 } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
 import NotesClient from "./Notes.client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import type { NoteTag } from "@/types/note";
 
 interface PageProps {
-  params: Promise<{ slug?: string[] }>;
+  params: { slug?: string[] };
 }
+
+const isNoteTag = (value: string): value is NoteTag =>
+  ["Todo", "Work", "Personal", "Meeting", "Shopping"].includes(value);
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const tag = slug?.[0];
-  const filter = tag && tag !== "all" ? tag : undefined;
+  const slugValue = params.slug?.[0];
+
+  const filter =
+    slugValue && slugValue !== "all" && isNoteTag(slugValue)
+      ? slugValue
+      : undefined;
 
   return {
-    title: `Notes filtered by ${filter}`,
-    description: `Viewing notes filtered by ${filter}`,
+    title: `Notes filtered by ${filter ?? "all"}`,
+    description: `Viewing notes filtered by ${filter ?? "all"}`,
     openGraph: {
-      title: `Notes filtered by ${filter}`,
-      description: `Viewing notes filtered by ${filter}`,
-      url: `/notes/filter/${filter}`,
+      title: `Notes filtered by ${filter ?? "all"}`,
+      description: `Viewing notes filtered by ${filter ?? "all"}`,
+      url: `/notes/filter/${filter ?? "all"}`,
       images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
     },
   };
 }
 
 export default async function FilterPage({ params }: PageProps) {
-  const { slug } = await params;
-  const tag = slug?.[0];
-  const filter = tag && tag !== "all" ? tag : undefined;
+  const slugValue = params.slug?.[0];
+
+  const filter =
+    slugValue && slugValue !== "all" && isNoteTag(slugValue)
+      ? slugValue
+      : undefined;
 
   const queryClient = new QueryClient();
 
